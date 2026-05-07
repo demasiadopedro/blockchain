@@ -1,4 +1,6 @@
 import { Bloco } from "./block.interface";
+import {createHmac} from 'crypto-js';
+
 
 export class Blockchain{
    #chain: Bloco[] = [];
@@ -7,13 +9,20 @@ export class Blockchain{
         this.#chain.push(this.criarBlocoGenesis())
    }
     private criarBlocoGenesis(): Bloco {
-        const payload = {
+        const payload: Bloco['payload'] = {
             sequencia: 0,
             timestamp: Number(new Date()),
-            dados: 'esse é o primeiro bloco',
+            data: 'esse é o primeiro bloco',
             hashAnterior:'',
         }
-        throw new Error("Function not implemented.");
+
+
+        return {
+            header:{
+                nonce: 0,
+                hashBloco: createHmac('sha256').update(payload).digest('hex')
+            }
+        }
     }
 }
 

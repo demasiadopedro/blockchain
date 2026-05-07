@@ -1,6 +1,5 @@
 import { Bloco } from "./block.interface";
-import {createHmac} from 'crypto-js';
-
+import * as crypto from 'crypto';
 
 export class Blockchain{
    #chain: Bloco[] = [];
@@ -20,7 +19,7 @@ export class Blockchain{
         return {
             header:{
                 nonce: 0,
-                hashBloco: createHmac('sha256').update(payload).digest('hex')
+                hashBloco: crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex')
             }
         }
     }

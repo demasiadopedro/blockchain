@@ -1,5 +1,5 @@
 import { Bloco } from "./block.interface";
-import * as crypto from 'crypto';
+import { hash } from "./helpers";
 
 export class Blockchain{
    #chain: Bloco[] = [];
@@ -19,7 +19,7 @@ export class Blockchain{
         return {
             header:{
                 nonce: 0,
-                hashBloco: crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex')
+                hashBloco: hash(JSON.stringify(payload))
             },
             payload
         }

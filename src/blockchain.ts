@@ -1,6 +1,6 @@
 import { timeStamp } from "node:console";
 import { Bloco } from "./block.interface";
-import { hash } from "./helpers";
+import { hash, validarHash } from "./helpers";
 
 export class Blockchain{
    #chain: Bloco[] = [];
@@ -45,12 +45,41 @@ export class Blockchain{
         console.log(`Bloco ${novoBLoco.sequencia} criado: ${JSON.stringify(novoBLoco)}` )
         return novoBLoco;
     }
-        enviarBloco(blocoMinerado: any): any {
+
+    minerarBloco(bloco: Bloco['payload']) {
+        let nonce: number = 0;
+        let inicio: number = Date.now();
+        while(true) {
+            const hashBloco = hash(JSON.stringify(bloco));
+            const hashPow = hash(hashBloco + nonce);
+            if(validarHash({hash:hashPow, dificuldade: this.dificuldade, prefixo: this.prefixoPow})){
+                const final: number= Date.now();
+                const hashReduzido = hashBloco.slice(0,12)
+                const tempoMinerado= (final -inicio) /1000;
+                console.log(`Bloco #${bloco.sequencia} minerado em ${tempoMinerado}s.`)
+                console.log(`hash reduzido: ${hashReduzido}`)
+                console.log('Tentativas:', nonce)
+                return { 
+                    blocoMinerado:{
+                        payload: {
+                            ...bloco
+                        },
+                        header: {
+                            nonce: nonce,
+                            hashBloco: hashBloco
+                        }
+                    }
+                }
+            }
+            nonce++
+        }
+
+
+    }
+    enviarBloco(blocoMinerado: any): any {
         throw new Error("Method not implemented.");
     }
-    minerarBloco(bloco: any) {
-        throw new Error("Method not implemented.");
-    }
+    
 }
 
 

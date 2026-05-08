@@ -1,3 +1,4 @@
+import { timeStamp } from "node:console";
 import { Bloco } from "./block.interface";
 import { hash } from "./helpers";
 
@@ -23,6 +24,32 @@ export class Blockchain{
             },
             payload
         }
+    }
+
+    private get ultimoBloco(): Bloco{
+        return this.#chain.at(-1) as Bloco
+    }
+
+    private hashUltimoBloco(): string{
+        return this.ultimoBloco.header.hashBloco;
+    }
+
+    criarBloco(data:):Bloco['payload']{
+        const novoBLoco: Bloco['payload'] = {
+            sequencia: this.ultimoBloco.payload.sequencia + 1,
+            timestamp: Date.now(),
+            hashAnterior: this.hashUltimoBloco(),
+            data: data
+        }
+
+        console.log(`Bloco ${novoBLoco.sequencia} criado: ${JSON.stringify(novoBLoco)}` )
+        return novoBLoco;
+    }
+        enviarBloco(blocoMinerado: any): any {
+        throw new Error("Method not implemented.");
+    }
+    minerarBloco(bloco: any) {
+        throw new Error("Method not implemented.");
     }
 }
 

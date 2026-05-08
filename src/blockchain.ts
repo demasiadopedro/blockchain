@@ -20,7 +20,8 @@ export class Blockchain{
             header:{
                 nonce: 0,
                 hashBloco: crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex')
-            }
+            },
+            payload
         }
     }
 }

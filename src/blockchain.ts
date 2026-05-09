@@ -1,6 +1,7 @@
 import { timeStamp } from "node:console";
 import { Bloco } from "./block.interface";
 import { hash, validarHash } from "./helpers";
+import { Blob } from "node:buffer";
 
 export class Blockchain{
    #chain: Bloco[] = [];
@@ -76,10 +77,14 @@ export class Blockchain{
 
 
     }
-    enviarBloco(blocoMinerado: any): any {
-        throw new Error("Method not implemented.");
+    enviarBloco(blocoMinerado: Bloco): Bloco[] {
+        if(verificarBloco( blocoMinerado)) {
+            this.#chain.push(blocoMinerado)
+            console.log(`O Bloco ${blocoMinerado.payload.sequencia} a Blockchain: ${JSON.stringify(blocoMinerado, null,2)}`)
+        }
+        return this.#chain;
     }
-    
+     
 }
 
 

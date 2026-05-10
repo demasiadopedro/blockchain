@@ -35,7 +35,7 @@ export class Blockchain{
         return this.ultimoBloco.header.hashBloco;
     }
 
-    criarBloco(data:):Bloco['payload']{
+    criarBloco(data: any):Bloco['payload']{
         const novoBLoco: Bloco['payload'] = {
             sequencia: this.ultimoBloco.payload.sequencia + 1,
             timestamp: Date.now(),
@@ -77,8 +77,22 @@ export class Blockchain{
 
 
     }
+
+    verificarBloco(bloco: Bloco): Boolean{
+        if(bloco.payload.hashAnterior !== this.hashUltimoBloco()){
+            console.error(`Bloco #${bloco.payload.sequencia} inválido: O hash anterior é ${this.hashUltimoBloco().slice(0, 12)} e não ${bloco.payload.hashAnterior.slice(0, 12)}`);
+            return false;
+        }
+        const hashTeste = hash(JSON.stringify(bloco.payload) + bloco.header.nonce)
+
+        if(validarHash({hash: hashTeste, dificuldade: this.dificuldade, prefixo: this.prefixoPow})){
+            console.error(`Bloco #${bloco.payload.sequencia} inválido: O nonce é invalido é invalido`);
+            return false;
+        }
+        return true
+    }
     enviarBloco(blocoMinerado: Bloco): Bloco[] {
-        if(verificarBloco( blocoMinerado)) {
+        if(this.verificarBloco( blocoMinerado)) {
             this.#chain.push(blocoMinerado)
             console.log(`O Bloco ${blocoMinerado.payload.sequencia} a Blockchain: ${JSON.stringify(blocoMinerado, null,2)}`)
         }
